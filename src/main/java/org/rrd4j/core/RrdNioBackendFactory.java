@@ -33,7 +33,7 @@ public class RrdNioBackendFactory extends RrdFileBackendFactory {
     /**
      * The thread pool to pass to newly-created RrdNioBackend instances.
      */
-    private RrdSyncThreadPool syncThreadPool;
+    private final RrdSyncThreadPool syncThreadPool;
 
     /**
      * Returns time between two consecutive background synchronizations. If not changed via
@@ -77,29 +77,41 @@ public class RrdNioBackendFactory extends RrdFileBackendFactory {
     }
 
     /**
-     * Creates a new RrdNioBackendFactory. One should call {@link #setSyncThreadPool(RrdSyncThreadPool syncThreadPool)}
-     * or {@link #setSyncThreadPool(RrdSyncThreadPool syncThreadPool)} before the first call to 
-     * {@link #open(String path, boolean readOnly)}.
-     * Failure to do so will lead to memory leaks in anything but the simplest applications because the underlying thread pool will not
+     * Creates a new RrdNioBackendFactory that is backed by the default thread pool. Note that using this constructor
+     * will lead to memory leaks in anything but the simplest applications because the underlying thread pool will not
      * be shut down cleanly. Read the Javadoc for this class to understand why using this constructor is discouraged.
      * <p/>
+     * Instead of calling this constructor, call {@link RrdNioBackendFactory#RrdNioBackendFactory(RrdSyncThreadPool)}
+     * with a previously-constructed pool to manage the life cycle of the thread pool manually and therefore avoid
+     * memory leaks.
+     *
+     * @deprecated since 2.2. Use {@link RrdNioBackendFactory#RrdNioBackendFactory(RrdSyncThreadPool)} instead.
      */
+    @Deprecated
     public RrdNioBackendFactory() {
-        super();
+        this((RrdSyncThreadPool) null);
     }
 
     /**
-     * @param syncThreadPool the RrdSyncThreadPool to use to sync the memory-mapped files.
+     * Creates a new RrdNioBackendFactory that is backed by the given thread pool. If the {@code syncThreadPool}
+     * parameter is null, the default thread pool will be used. Read the Javadoc for this class to understand why this
+     * is discouraged.
+     *
+     * @param syncThreadPool the RrdSyncThreadPool to use to sync the memory-mapped files, or null
      */
-    public void setSyncThreadPool(RrdSyncThreadPool syncThreadPool) {
+    public RrdNioBackendFactory(RrdSyncThreadPool syncThreadPool) {
         this.syncThreadPool = syncThreadPool;
     }
 
     /**
-     * @param syncThreadPool the ScheduledExecutorService that will back the RrdSyncThreadPool  used to sync the memory-mapped files.
+     * Creates a new RrdNioBackendFactory that is backed by the given thread pool. If the {@code syncThreadPool}
+     * parameter is null, the default thread pool will be used. Read the Javadoc for this class to understand why this
+     * is discouraged.
+     *
+     * @param syncThreadPool the RrdSyncThreadPool to use to sync the memory-mapped files, or null
      */
-    public void setSyncThreadPool(ScheduledExecutorService syncThreadPool) {
-        this.syncThreadPool = new RrdSyncThreadPool(syncThreadPool);
+    public RrdNioBackendFactory(ScheduledExecutorService syncThreadPool) {
+        this(new RrdSyncThreadPool(syncThreadPool));
     }
 
     /**
@@ -112,11 +124,10 @@ public class RrdNioBackendFactory extends RrdFileBackendFactory {
      * @throws IOException Thrown in case of I/O error.
      */
     protected RrdBackend open(String path, boolean readOnly) throws IOException {
-        // Instantiate a thread pool if none was provided
-        if(syncThreadPool == null)
-            syncThreadPool = DefaultSyncThreadPool.INSTANCE;
+        // prefer using the thread pool provided in the constructor, if any
+        RrdSyncThreadPool threadPool = syncThreadPool != null ? syncThreadPool : DefaultSyncThreadPool.INSTANCE;
 
-        return new RrdNioBackend(path, readOnly, syncThreadPool, syncPeriod);
+        return new RrdNioBackend(path, readOnly, threadPool, syncPeriod);
     }
 
     public String getName() {

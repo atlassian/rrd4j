@@ -17,16 +17,7 @@ class Stack extends SourcedPlotElement {
         double[] procValues = dproc.getValues(srcName);
         values = new double[procValues.length];
         for (int i = 0; i < values.length; i++) {
-            if (Double.isNaN(parentValues[i])) {
-                values[i] = procValues[i];
-            }
-            else if (Double.isNaN(procValues[i])){
-                values[i] = parentValues[i];
-            }
-            else {
-                values[i] = parentValues[i] + procValues[i];
-                
-            }
+            values[i] = parentValues[i] + procValues[i];
         }
     }
 

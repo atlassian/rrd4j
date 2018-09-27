@@ -27,12 +27,12 @@ public final class RrdSyncThreadPool
 
     /**
      * The {@link java.util.concurrent.ScheduledExecutorService} used to periodically sync the mapped file to disk with.
-     * Defaults to {@value org.rrd4j.core.RrdNioBackendFactory#DEFAULT_SYNC_CORE_POOL_SIZE} threads.
+     * Defaults to {@value RrdNioBackendFactory#DEFAULT_SYNC_CORE_POOL_SIZE} threads.
      */
     private final ScheduledExecutorService syncExecutor;
 
     /**
-     * Creates a new RrdSyncThreadPool with a default pool size of {@value org.rrd4j.core.RrdNioBackendFactory#DEFAULT_SYNC_CORE_POOL_SIZE}.
+     * Creates a new RrdSyncThreadPool with a default pool size of {@value RrdNioBackendFactory#DEFAULT_SYNC_CORE_POOL_SIZE}.
      */
     public RrdSyncThreadPool() {
         this(RrdNioBackendFactory.DEFAULT_SYNC_CORE_POOL_SIZE);
@@ -69,7 +69,8 @@ public final class RrdSyncThreadPool
      */
     public RrdSyncThreadPool(int syncPoolSize, ThreadFactory threadFactory) {
         ThreadFactory poolThreadFactory = threadFactory;
-        if (poolThreadFactory == null) {
+        if (poolThreadFactory == null)
+        {
             poolThreadFactory = new DaemonThreadFactory("RRD4J Sync-ThreadPool for " + this);
         }
 
@@ -117,7 +118,8 @@ public final class RrdSyncThreadPool
         syncExecutor.shutdown();
     }
 
-    ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+    ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)
+    {
         return syncExecutor.scheduleWithFixedDelay(command, initialDelay, delay, unit);
     }
 

@@ -81,8 +81,7 @@ public class RrdGraphDef implements RrdGraphConstants {
             DEFAULT_MGRID_COLOR,
             DEFAULT_FONT_COLOR,
             DEFAULT_FRAME_COLOR,
-            DEFAULT_ARROW_COLOR,
-            DEFAULT_XAXIS_COLOR
+            DEFAULT_ARROW_COLOR
     };
     boolean noLegend = false; // ok
     boolean onlyGraph = false; // ok
@@ -407,7 +406,7 @@ public class RrdGraphDef implements RrdGraphConstants {
     /**
      * Sets image format.
      *
-     * @param imageFormat Any value as return by {@link javax.imageio.ImageIO#getReaderFormatNames}
+     * @param imageFormat "PNG", "GIF" or "JPG".
      */
     public void setImageFormat(String imageFormat) {
         this.imageFormat = imageFormat;
@@ -513,7 +512,6 @@ public class RrdGraphDef implements RrdGraphConstants {
      * colorTag must be one of the following constants defined in the {@link RrdGraphConstants}:
      * {@link RrdGraphConstants#COLOR_BACK COLOR_BACK}ground,
      * {@link RrdGraphConstants#COLOR_CANVAS COLOR_CANVAS},
-     * {@link RrdGraphConstants#COLOR_XAXIS COLOR_XAXIS},
      * {@link RrdGraphConstants#COLOR_SHADEA COLOR_SHADEA} left/top border,
      * {@link RrdGraphConstants#COLOR_SHADEB COLOR_SHADEB} right/bottom border,
      * {@link RrdGraphConstants#COLOR_GRID COLOR_GRID},
@@ -839,56 +837,6 @@ public class RrdGraphDef implements RrdGraphConstants {
     }
 
     /**
-     * Draws a horizontal span into the graph.
-     *
-     * @param start Starting value of the span
-     * @param end   Ending value of the span
-     * @param color Rule color
-     */
-    public void hspan(double start, double end, Paint color) {
-        hspan(start, end, color, null);
-    }
-
-    /**
-     * Draws a horizontal span into the graph and optionally adds a legend.
-     *
-     * @param start     Starting value of the span
-     * @param end       Ending value of the span
-     * @param color     Rule color
-     * @param legend    Legend text. Use null to omit the text.
-     */
-    public void hspan(double start, double end, Paint color, String legend) {
-        LegendText legendText = new LegendText(color, legend);
-        comments.add(legendText);
-        plotElements.add(new HSpan(start, end, color, legendText));
-    }
-
-    /**
-     * Draws a vertical span into the graph.
-     *
-     * @param start     Start time for the span (seconds since epoch)
-     * @param end       End time for the span (seconds since epoch)
-     * @param color     Rule color
-     */
-    public void vspan(long start, long end, Paint color) {
-        vspan(start, end, color, null);
-    }
-
-    /**
-     * Draws a vertical span into the graph and optionally adds a legend.
-     *
-     * @param start     Start time for the span (seconds since epoch)
-     * @param end       End time for the span (seconds since epoch)
-     * @param color     Rule color
-     * @param legend    Legend text. Use null to omit the text.
-     */
-    public void vspan(long start, long end, Paint color, String legend) {
-        LegendText legendText = new LegendText(color, legend);
-        comments.add(legendText);
-        plotElements.add(new VSpan(start, end, color, legendText));
-    }
-
-    /**
      * Plots requested data as a line, using the color specified. Line width is assumed to be
      * 1.0F.
      *
@@ -1110,7 +1058,7 @@ public class RrdGraphDef implements RrdGraphConstants {
     public void setTimeZone(TimeZone tz) {
         this.tz = tz;
     }
-
+    
     /**
      * Set the Stroke used to draw grid
      * @param gridStroke
