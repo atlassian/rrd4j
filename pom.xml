@@ -6,7 +6,7 @@
     <artifactId>rrd4j</artifactId>
     <name>RRD4J</name>
     <packaging>jar</packaging>
-    <version>3.3-SNAPSHOT</version>
+    <version>3.3-atlassian-1-SNAPSHOT</version>
     <description>A high performance data logging and graphing system for time series data.</description>
     <url>https://github.com/rrd4j/rrd4j/</url>
     <!-- Use the Sonatype parent to be able to sync to central. -->
@@ -36,10 +36,20 @@
     <scm>
         <!-- See http://maven.apache.org/plugins/maven-release-plugin/examples/perform-release.html -->
         <!-- for how to perform a release from the connection below. -->
-        <connection>scm:git:https://github.com/rrd4j/rrd4j.git</connection>
-        <developerConnection>scm:git:https://github.com/rrd4j/rrd4j.git</developerConnection>
-        <url>https://github.com/rrd4j/rrd4j/</url>
+        <connection>scm:git:ssh://git@github.com/atlassian/rrd4j.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/atlassian/rrd4j.git</developerConnection>
+        <url>https://github.com/atlassian/rrd4j/</url>
     </scm>
+    <distributionManagement>
+        <repository>
+            <id>atlassian-3rdparty</id>
+            <url>https://packages.atlassian.com/maven/3rdparty</url>
+        </repository>
+        <snapshotRepository>
+            <id>atlassian-3rdparty-snapshot</id>
+            <url>https://packages.atlassian.com/maven/3rdparty-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
     <dependencies>
         <!-- Dependencies for optional backends should have optional=true. -->
         <dependency>
@@ -265,7 +275,6 @@
                             sign the artifacts. -->
                         <!-- The key has to be installed on a machine to 
                             be able to perform a release. -->
-                        <keyname>RRD4J Build</keyname>
                         <useAgent>true</useAgent>
                         <mavenExecutorId>forked-path</mavenExecutorId>
                     </configuration>

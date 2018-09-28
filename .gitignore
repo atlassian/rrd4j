@@ -1,0 +1,7 @@
+# Files created by the maven build
+/speed2.gif
+/target
+
+# IntelliJ IDEA project files
+/.idea
+*.iml
